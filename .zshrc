@@ -80,6 +80,7 @@ plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
