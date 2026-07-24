@@ -12,6 +12,7 @@
     home = "/Users/${user}";
   };
   system.stateVersion = 6;
+  home-manager.backupFileExtension = ".backup";
   system.defaults = {
     NSGlobalDomain = {
       AppleInterfaceStyle = "Dark";
