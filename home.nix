@@ -16,6 +16,8 @@ in
     jq        # json on the command line
     lazygit
     neovim
+    # Pi Coding Agent CLI
+    pi-coding-agent
     # the font everything renders in
     nerd-fonts.hack
   ];
@@ -28,6 +30,8 @@ in
     syntaxHighlighting.enable = true;  # commands turn green when valid
     initContent = ''
       bindkey '^f' autosuggest-accept
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
     '';
     shellAliases = {
       ".." = "cd ..";

@@ -36,6 +36,7 @@
     casks = [
       "wezterm"
       "claude-code"
+      "raycast"
     ];
   };
 }
