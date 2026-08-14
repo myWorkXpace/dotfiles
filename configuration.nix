@@ -29,9 +29,12 @@
     enable = true;
     #onActivation.cleanup = "zap";  # remove anything not listed here
     onActivation.autoUpdate = true;
+    onActivation.upgrade = true;
     #onActivation.extraFlags = [ "--force" ];
     brews = [
       "herdr"
+      "nvm"
+      "pipx"
     ];
     casks = [
       "wezterm"
