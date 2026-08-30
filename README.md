@@ -76,7 +76,7 @@ Edit the config files in place, then apply:
 ./rebuild.sh
 ```
 
-That's it.
+The Nix-managed activation upgrades Homebrew packages and SerenaSitter through `pipx`, then applies the Nix configuration.
 No separate build-and-copy step.
 
 ## Make it yours
