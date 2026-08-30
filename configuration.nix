@@ -31,15 +31,48 @@
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
     #onActivation.extraFlags = [ "--force" ];
+    taps = [
+      "pear-devs/pear"
+      "xykong/tap"
+    ];
     brews = [
+      "bat"
+      "dust"
+      "duti"
+      "fd"
+      "ffmpeg"
+      "fzf"
+      "gcc"
+      "gcc@15"
+      "gh"
+      "git"
       "herdr"
+      "htop"
+      "httpie"
+      "httrack"
+      "jq"
+      "lazygit"
+      "maven"
       "nvm"
       "pipx"
+      "pyenv"
+      "tmux"
+      "tree"
+      "uv"
+      "yt-dlp"
+      "zoxide"
     ];
     casks = [
-      "wezterm"
+      "alt-tab"
       "claude-code"
+      "dockdoor"
+      "flux-markdown"
+      "maccy"
+      "ngrok"
+      "pear-desktop"
       "raycast"
+      "warp"
+      "wezterm"
     ];
   };
 }
