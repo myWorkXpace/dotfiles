@@ -32,6 +32,12 @@ in
     enable = true;
     autosuggestion.enable = true;      # ghost text from history
     syntaxHighlighting.enable = true;  # commands turn green when valid
+    envExtra = ''
+      export PATH="$HOME/.local/bin:$PATH"
+    '';
+    profileExtra = ''
+      export PATH="$HOME/.local/bin:$PATH"
+    '';
     initContent = ''
       bindkey '^f' autosuggest-accept
       export PATH="$HOME/.local/bin:$PATH"
