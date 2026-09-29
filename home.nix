@@ -12,25 +12,48 @@ in
     # cli i use constantly
     ripgrep   # fast search
     fd        # fast find
-    fzf       # fuzzy finder
     jq        # json on the command line
+    _7zz-rar  # official 7-Zip (7zz), with RAR support
     lazygit
     neovim
+    github-copilot-cli
+    codex
+    gemini-cli
     # Pi Coding Agent CLI
     pi-coding-agent
     # the font everything renders in
     nerd-fonts.hack
   ];
   fonts.fontconfig.enable = true;
-  home.sessionVariables.EDITOR = "nvim";
+  programs.vscode = {
+    enable = true;
+    profiles.default.extensions = [ pkgs.vscode-extensions.github.copilot ];
+  };
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    JAVA_HOME = "/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home";
+  };
   home.sessionPath = [ "$HOME/.local/bin" ];
   home.activation.upgradeSerenaSitter = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     PATH="/opt/homebrew/bin:/usr/bin:/bin" /opt/homebrew/bin/pipx upgrade serenasitter
   '';
+  home.activation.installLatestLtsNode = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    activationPath="$PATH"
+    export PATH="$PATH:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    export NVM_DIR="$HOME/.nvm"
+    . /opt/homebrew/opt/nvm/nvm.sh
+    nvm install --lts
+    nvm alias default 'lts/*'
+    export PATH="$activationPath"
+    unset activationPath
+  '';
 
   programs.zsh = {
     enable = true;
-    autosuggestion.enable = true;      # ghost text from history
+    autosuggestion = {
+      enable = true;
+      strategy = [ "history" "completion" ];
+    };
     syntaxHighlighting.enable = true;  # commands turn green when valid
     envExtra = ''
       export PATH="$HOME/.local/bin:$PATH"
@@ -38,12 +61,34 @@ in
     profileExtra = ''
       export PATH="$HOME/.local/bin:$PATH"
     '';
-    initContent = ''
-      bindkey '^f' autosuggest-accept
-      export PATH="$HOME/.local/bin:$PATH"
-      export NVM_DIR="$HOME/.nvm"
-      [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
-    '';
+    # fzf-tab must load after compinit (570) and before autosuggestions (700).
+    initContent = lib.mkMerge [
+      (lib.mkOrder 600 ''
+        source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
+        zstyle ':completion:*' menu no
+        zstyle ':completion:*:descriptions' format '[%d]'
+        zstyle ':fzf-tab:*' switch-group '<' '>'
+      '')
+      ''
+        bindkey '^f' autosuggest-accept
+        # Up/Down search history by the typed prefix; both normal and application-mode arrow codes.
+        autoload -U up-line-or-beginning-search down-line-or-beginning-search
+        zle -N up-line-or-beginning-search
+        zle -N down-line-or-beginning-search
+        bindkey '^[[A' up-line-or-beginning-search
+        bindkey '^[OA' up-line-or-beginning-search
+        bindkey '^[[B' down-line-or-beginning-search
+        bindkey '^[OB' down-line-or-beginning-search
+        export PATH="$HOME/.local/bin:$PATH"
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
+        # Interactive gcc/g++ -> Homebrew GNU GCC; build tools keep Apple clang via PATH.
+        for _gcc in /opt/homebrew/opt/gcc/bin/gcc-<->(N); do
+          alias gcc="$_gcc" g++="''${_gcc:h}/g++-''${_gcc##*-}"
+        done
+        unset _gcc
+      ''
+    ];
     shellAliases = {
       ".." = "cd ..";
       add = "git add .";
@@ -54,6 +99,9 @@ in
       co = "codex --full-auto";
     };
   };
+
+  programs.fzf.enable = true;       # Ctrl-R history, Ctrl-T files, Alt-C dirs
+  programs.carapace.enable = true;  # completions for 1000+ CLIs
 
   programs.starship = {
     enable = true;

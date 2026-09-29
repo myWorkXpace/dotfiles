@@ -1,21 +1,54 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "mcp__serenasitter__activate_project",
+      "mcp__serenasitter__analyze_code",
+      "mcp__serenasitter__batch",
+      "mcp__serenasitter__batch_edit",
+      "mcp__serenasitter__check_shell_command_batch",
+      "mcp__serenasitter__clear_cache",
+      "mcp__serenasitter__edit_symbol",
+      "mcp__serenasitter__execute_shell_command_batch",
+      "mcp__serenasitter__expand",
+      "mcp__serenasitter__fetch_context",
+      "mcp__serenasitter__find_files",
+      "mcp__serenasitter__find_symbol",
+      "mcp__serenasitter__get_config",
+      "mcp__serenasitter__get_context",
+      "mcp__serenasitter__get_diagnostics",
+      "mcp__serenasitter__help",
+      "mcp__serenasitter__index_status",
+      "mcp__serenasitter__investigate",
+      "mcp__serenasitter__list_languages",
+      "mcp__serenasitter__project_snapshot",
+      "mcp__serenasitter__read_file",
+      "mcp__serenasitter__refactor_check",
+      "mcp__serenasitter__reindex_project",
+      "mcp__serenasitter__search_code",
+      "mcp__serenasitter__search_index",
+      "mcp__serenasitter__semantic_doc_search",
+      "mcp__serenasitter__symbol_navigate",
+      "mcp__serenasitter__write_file"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
+        "matcher": "*",
         "hooks": [
           {
+            "type": "command",
             "command": "bash '/Users/lakshya/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10,
-            "type": "command"
+            "timeout": 10
           }
-        ],
-        "matcher": "*"
+        ]
       }
     ]
   },
   "statusLine": {
-    "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name'); used=$(echo \"$input\" | jq -r '.context_window.used_percentage // empty'); if [ -n \"$used\" ]; then printf \"%s | ctx: %.0f%% used\" \"$model\" \"$used\"; else printf \"%s\" \"$model\"; fi",
-    "type": "command"
+    "type": "command",
+    "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name'); used=$(echo \"$input\" | jq -r '.context_window.used_percentage // empty'); if [ -n \"$used\" ]; then printf \"%s | ctx: %.0f%% used\" \"$model\" \"$used\"; else printf \"%s\" \"$model\"; fi"
   },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
@@ -56,38 +89,5 @@
     "mongodb@claude-plugins-official": true,
     "desktop-commander@claude-plugins-official": true
   },
-  "theme": "dark-ansi",
-  "permissions": {
-    "allow": [
-      "Bash(node -e ' *)",
-      "mcp__serenasitter__activate_project",
-      "mcp__serenasitter__analyze_code",
-      "mcp__serenasitter__batch",
-      "mcp__serenasitter__batch_edit",
-      "mcp__serenasitter__check_shell_command_batch",
-      "mcp__serenasitter__clear_cache",
-      "mcp__serenasitter__edit_symbol",
-      "mcp__serenasitter__execute_shell_command_batch",
-      "mcp__serenasitter__expand",
-      "mcp__serenasitter__fetch_context",
-      "mcp__serenasitter__find_files",
-      "mcp__serenasitter__find_symbol",
-      "mcp__serenasitter__get_config",
-      "mcp__serenasitter__get_context",
-      "mcp__serenasitter__get_diagnostics",
-      "mcp__serenasitter__help",
-      "mcp__serenasitter__index_status",
-      "mcp__serenasitter__investigate",
-      "mcp__serenasitter__list_languages",
-      "mcp__serenasitter__project_snapshot",
-      "mcp__serenasitter__read_file",
-      "mcp__serenasitter__refactor_check",
-      "mcp__serenasitter__reindex_project",
-      "mcp__serenasitter__search_code",
-      "mcp__serenasitter__search_index",
-      "mcp__serenasitter__semantic_doc_search",
-      "mcp__serenasitter__symbol_navigate",
-      "mcp__serenasitter__write_file"
-    ]
-  }
+  "theme": "dark-ansi"
 }
