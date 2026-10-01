@@ -12,11 +12,10 @@ in
     # cli i use constantly
     ripgrep   # fast search
     fd        # fast find
-    fzf       # fuzzy finder
     jq        # json on the command line
+    _7zz-rar  # official 7-Zip (7zz), with RAR support
     lazygit
     neovim
-    superfile  # terminal file manager (spf), for herdr panes
     # Pi Coding Agent CLI
     pi-coding-agent
     # the font everything renders in
@@ -24,18 +23,27 @@ in
   ];
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
-  home.sessionPath = [
-    "$HOME/.local/bin"
-    "$HOME/Developer/flutter/bin"
-    "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
-  ];
+  home.sessionPath = [ "$HOME/.local/bin" ];
   home.activation.upgradeSerenaSitter = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     PATH="/opt/homebrew/bin:/usr/bin:/bin" /opt/homebrew/bin/pipx upgrade serenasitter
+  '';
+  home.activation.installLatestLtsNode = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    activationPath="$PATH"
+    export PATH="$PATH:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    export NVM_DIR="$HOME/.nvm"
+    . /opt/homebrew/opt/nvm/nvm.sh
+    nvm install --lts
+    nvm alias default 'lts/*'
+    export PATH="$activationPath"
+    unset activationPath
   '';
 
   programs.zsh = {
     enable = true;
-    autosuggestion.enable = true;      # ghost text from history
+    autosuggestion = {
+      enable = true;
+      strategy = [ "history" "completion" ];
+    };
     syntaxHighlighting.enable = true;  # commands turn green when valid
     envExtra = ''
       export PATH="$HOME/.local/bin:$PATH"
@@ -66,6 +74,9 @@ in
       co = "codex --full-auto";
     };
   };
+
+  programs.fzf.enable = true;       # Ctrl-R history, Ctrl-T files, Alt-C dirs
+  programs.carapace.enable = true;  # completions for 1000+ CLIs
 
   programs.starship = {
     enable = true;
