@@ -33,6 +33,7 @@
     #onActivation.extraFlags = [ "--force" ];
     taps = [
       "pear-devs/pear"
+      "supabase/tap"
       "xykong/tap"
     ];
     brews = [
@@ -56,6 +57,7 @@
       "nvm"
       "pipx"
       "pyenv"
+      "supabase"
       "tmux"
       "tree"
       "uv"
@@ -69,6 +71,7 @@
       "flux-markdown"
       "maccy"
       "ngrok"
+      "orbstack"
       "pear-desktop"
       "raycast"
       "warp"
