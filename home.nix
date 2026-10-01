@@ -16,23 +16,13 @@ in
     _7zz-rar  # official 7-Zip (7zz), with RAR support
     lazygit
     neovim
-    github-copilot-cli
-    codex
-    gemini-cli
     # Pi Coding Agent CLI
     pi-coding-agent
     # the font everything renders in
     nerd-fonts.hack
   ];
   fonts.fontconfig.enable = true;
-  programs.vscode = {
-    enable = true;
-    profiles.default.extensions = [ pkgs.vscode-extensions.github.copilot ];
-  };
-  home.sessionVariables = {
-    EDITOR = "nvim";
-    JAVA_HOME = "/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home";
-  };
+  home.sessionVariables.EDITOR = "nvim";
   home.sessionPath = [ "$HOME/.local/bin" ];
   home.activation.upgradeSerenaSitter = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     PATH="/opt/homebrew/bin:/usr/bin:/bin" /opt/homebrew/bin/pipx upgrade serenasitter
@@ -57,38 +47,23 @@ in
     syntaxHighlighting.enable = true;  # commands turn green when valid
     envExtra = ''
       export PATH="$HOME/.local/bin:$PATH"
+      export PATH="$HOME/Developer/flutter/bin:$PATH"
     '';
     profileExtra = ''
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+      [ -f /usr/libexec/java_home ] && export JAVA_HOME=$(/usr/libexec/java_home 2>/dev/null)
       export PATH="$HOME/.local/bin:$PATH"
+      export PATH="$HOME/Developer/flutter/bin:$PATH"
+      export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
     '';
-    # fzf-tab must load after compinit (570) and before autosuggestions (700).
-    initContent = lib.mkMerge [
-      (lib.mkOrder 600 ''
-        source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
-        zstyle ':completion:*' menu no
-        zstyle ':completion:*:descriptions' format '[%d]'
-        zstyle ':fzf-tab:*' switch-group '<' '>'
-      '')
-      ''
-        bindkey '^f' autosuggest-accept
-        # Up/Down search history by the typed prefix; both normal and application-mode arrow codes.
-        autoload -U up-line-or-beginning-search down-line-or-beginning-search
-        zle -N up-line-or-beginning-search
-        zle -N down-line-or-beginning-search
-        bindkey '^[[A' up-line-or-beginning-search
-        bindkey '^[OA' up-line-or-beginning-search
-        bindkey '^[[B' down-line-or-beginning-search
-        bindkey '^[OB' down-line-or-beginning-search
-        export PATH="$HOME/.local/bin:$PATH"
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
-        # Interactive gcc/g++ -> Homebrew GNU GCC; build tools keep Apple clang via PATH.
-        for _gcc in /opt/homebrew/opt/gcc/bin/gcc-<->(N); do
-          alias gcc="$_gcc" g++="''${_gcc:h}/g++-''${_gcc##*-}"
-        done
-        unset _gcc
-      ''
-    ];
+    initContent = ''
+      bindkey '^f' autosuggest-accept
+      export PATH="$HOME/.local/bin:$PATH"
+      export PATH="$HOME/Developer/flutter/bin:$PATH"
+      export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
+    '';
     shellAliases = {
       ".." = "cd ..";
       add = "git add .";
@@ -123,6 +98,11 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/nvim";
   home.file.".config/herdr".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/herdr";
+  # superfile keeps its config outside ~/.config on macOS
+  home.file."Library/Application Support/superfile/config.toml".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/Library/Application Support/superfile/config.toml";
+  home.file."Library/Application Support/superfile/hotkeys.toml".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/Library/Application Support/superfile/hotkeys.toml";
   home.file.".claude/settings.json".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/settings.json";
 
